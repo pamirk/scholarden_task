@@ -2,12 +2,18 @@ import {Select, Spin} from 'antd';
 import React from 'react';
 import debounce from 'lodash/debounce';
 
-export function DebounceSelect({error, fetchOptions, debounceTimeout = 800, ...props}: any) {
+export function DebounceSelect({
+                                   error,
+                                   fetchOptions,
+                                   setValues,
+                                   debounceTimeout = 800,
+                                   ...props
+                               }: any) {
     const [fetching, setFetching] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const fetchRef = React.useRef(0);
     const debounceFetcher = React.useMemo(() => {
-        setOptions([])
+        setOptions([]);
         const loadOptions = (value) => {
             fetchRef.current += 1;
             const fetchId = fetchRef.current;
@@ -16,6 +22,8 @@ export function DebounceSelect({error, fetchOptions, debounceTimeout = 800, ...p
             fetchOptions(value).then((newOptions) => {
                 if (fetchId !== fetchRef.current) {
                     // for fetch callback order
+                    setValues([])
+                    setOptions([])
                     return;
                 }
 
